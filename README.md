@@ -1,11 +1,11 @@
-# RocketMQ Http-Proxy PHP SDK
+# RocketMQ PHP SDK
 
-火山引擎消息队列 RocketMQ版 Http-Proxy PHP SDK 是基于 Http-Proxy 的RocketMQ客户端。 该SDK可通过RocketMQ实例的Http Proxy 接入点连接实例，实现消息的生产与消费。
+火山引擎消息队列 RocketMQ版PHP SDK 是基于 Http-Proxy 的RocketMQ客户端。 该SDK可通过RocketMQ实例的Http Proxy 接入点连接实例，实现消息的生产与消费。
 
 # 安装
 
 ```shell
-composer require volcengine/ve-rocketmq-http-proxy-php-sdk
+composer require volcengine/ve-rocketmq-php-sdk
 ```
 
 # 快速开始
