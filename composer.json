@@ -1,5 +1,5 @@
 {
-  "name": "volcengine/ve-rocketmq-http-proxy-php-sdk",
+  "name": "volcengine/ve-rocketmq-php-sdk",
   "autoload": {
     "psr-4": {
       "RMQ\\": "src/"
