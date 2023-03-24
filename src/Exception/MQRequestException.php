@@ -42,6 +42,10 @@ class MQRequestException extends MQException
   }
 
 
+  public function getHttpCode(){
+    return $this->httpCode;
+  }
+
 }
 
 ?>
