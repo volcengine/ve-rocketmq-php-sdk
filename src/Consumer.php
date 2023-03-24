@@ -3,6 +3,7 @@ namespace RMQ;
 
 use RMQ\Common\ArrayUtils;
 use RMQ\Common\ExceptionUtils;
+use RMQ\Common\NumberUtils;
 use RMQ\Constants\ClientConstants;
 use RMQ\Constants\ConsumerOptions;
 use RMQ\Exception\MQInvalidArgumentException;
@@ -35,6 +36,9 @@ class Consumer extends Worker
    */
   public function __construct(Client $mqClient, $groupId, array $config = [])
   {
+    $maxMessageNumber = ArrayUtils::getArrayAttribute($config, [ConsumerOptions::MAX_MESSAGE_NUMBER], ClientConstants::DEFAULT_MAX_MESSAGE_NUMBER);
+    $maxWaitTime      = ArrayUtils::getArrayAttribute($config, [ConsumerOptions::MAX_WAIT_TIME], ClientConstants::DEFAULT_MAX_WAIT_TIME);
+
     if (empty($mqClient)) {
       throw new MQInvalidArgumentException("please pass the Client referenced by Consumer");
     }
@@ -43,11 +47,22 @@ class Consumer extends Worker
       throw new MQInvalidArgumentException("groupId is necessary");
     }
 
+    if (!NumberUtils::intCheck($maxMessageNumber, 1, 30)) {
+      $maxMsgNumKey = ConsumerOptions::MAX_MESSAGE_NUMBER;
+      throw new MQInvalidArgumentException("$maxMsgNumKey must be an integer in the range of 1 to 30");
+    }
+
+    if (!NumberUtils::intCheck($maxWaitTime, 1000, 30000)) {
+      $maxWaitTimeKey = ConsumerOptions::MAX_WAIT_TIME;
+      throw new MQInvalidArgumentException("$maxWaitTimeKey must be an integer in the range of 1000 to 30000");
+    }
+
+
     parent::__construct($mqClient, WorkerConstant::WORKER_TYPE_CONSUMER);
 
     $this->groupId          = $groupId;
-    $this->maxMessageNumber = ArrayUtils::getArrayAttribute($config, [ConsumerOptions::MAX_MESSAGE_NUMBER], ClientConstants::DEFAULT_MAX_MESSAGE_NUMBER);
-    $this->maxWaitTime      = ArrayUtils::getArrayAttribute($config, [ConsumerOptions::MAX_WAIT_TIME], ClientConstants::DEFAULT_MAX_WAIT_TIME);
+    $this->maxMessageNumber = $maxMessageNumber;
+    $this->maxWaitTime      = $maxWaitTime;
   }
 
   /**
