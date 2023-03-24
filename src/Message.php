@@ -1,6 +1,7 @@
 <?php
 namespace RMQ;
 
+use RMQ\Common\NumberUtils;
 use RMQ\Exception\MQInvalidArgumentException;
 
 class Message
@@ -24,11 +25,11 @@ class Message
   public function __construct($topic, $body)
   {
     if (empty($topic)) {
-      throw new MQInvalidArgumentException("topic can not be empty`");
+      throw new MQInvalidArgumentException("topic can not be empty");
     }
 
     if (empty($body)) {
-      throw new MQInvalidArgumentException("body can not be empty`");
+      throw new MQInvalidArgumentException("body can not be empty");
     }
 
     $this->topic = $topic;
@@ -40,6 +41,9 @@ class Message
    */
   public function setShardingKey($shardingKey)
   {
+    if (empty($shardingKey)) {
+      throw new MQInvalidArgumentException("shardingKey can not be empty");
+    }
     $this->shardingKey = $shardingKey;
   }
 
@@ -48,6 +52,9 @@ class Message
    */
   public function setTag($tag)
   {
+    if (empty($tag)) {
+      throw new MQInvalidArgumentException("tag can not be empty");
+    }
     $this->tag = $tag;
   }
 
@@ -65,23 +72,21 @@ class Message
    */
   public function putProperty($key, $value)
   {
+    if (empty($key)) {
+      throw new MQInvalidArgumentException("key can not be empty");
+    }
+
     $this->messageProperties[$key] = $value;
   }
 
   /**
-   * @param int $seconds 
+   * @param number $level
    */
-  public function delayAfter($seconds)
-  {
-    $this->messageProperties["__DELAY_AFTER"] = "$seconds";
-  }
-
-  /**
-   * @param int $timeStamp 
-   */
-  public function delayAt($timeStamp)
-  {
-    $this->messageProperties["__DELAY_AT"] = "$timeStamp";
+  public function setDelayLevel($level) {
+    if (!NumberUtils::intCheck($level, 1, 18)) {
+      throw new MQInvalidArgumentException("level must be an integer in the range of 1 to 18");
+    }
+    $this->putProperty("__DelayTimeLevel", "$level");
   }
 
   /**

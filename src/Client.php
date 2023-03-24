@@ -2,6 +2,7 @@
 namespace RMQ;
 
 use RMQ\Common\ArrayUtils;
+use RMQ\Common\NumberUtils;
 use RMQ\Constants\ClientConstants;
 use RMQ\Constants\ClientOptions;
 use RMQ\Exception\MQInvalidArgumentException;
@@ -33,6 +34,9 @@ class Client
    */
   public function __construct($endpoint, $accessKey, $secretKey, array $config = [])
   {
+
+    $sessionTimeout = ArrayUtils::getArrayAttribute($config, [ClientOptions::SESSION_TIMEOUT], ClientConstants::DEFAULT_SESSION_TIMEOUT);
+
     if (empty($endpoint)) {
       throw new MQInvalidArgumentException("endpoint is necessary");
     }
@@ -45,6 +49,11 @@ class Client
       throw new MQInvalidArgumentException("secretKey is necessary");
     }
 
+    if (!NumberUtils::intCheck($sessionTimeout, 30, 600)) {
+      $timeoutKey = ClientOptions::SESSION_TIMEOUT;
+      throw new MQInvalidArgumentException("$timeoutKey must be an integer in the range of 30 to 600");
+    }
+    
     $urlInfo  = parse_url($endpoint);
     $hostname = $urlInfo["host"];
     $port     = $urlInfo["port"];
@@ -52,7 +61,7 @@ class Client
     $this->endpoint       = $endpoint;
     $this->accessKey      = $accessKey;
     $this->secretKey      = $secretKey;
-    $this->sessionTimeout = ArrayUtils::getArrayAttribute($config, [ClientOptions::SESSION_TIMEOUT], ClientConstants::DEFAULT_SESSION_TIMEOUT);
+    $this->sessionTimeout = $sessionTimeout;
     $this->Host           = empty($port) ? $hostname : "$hostname:$port";
     $this->httpClient     = new HttpClient($endpoint);
   }

@@ -2,9 +2,12 @@
 namespace RMQ\Worker;
 
 use RMQ\Client;
+use RMQ\Common\ExceptionUtils;
+use RMQ\Exception\MQInvalidSecretKey;
 use RMQ\RequestParams\OpenParams;
 use RMQ\RequestParams\CloseParams;
 use RMQ\RequestResponse\OpenResponse;
+use RuntimeException;
 
 class Worker
 {
@@ -33,11 +36,19 @@ class Worker
    */
   protected function _open(OpenParams $params)
   {
-    $timeoutSecond = $this->mqClient->getSessionTimeout();
-    $params->addProperties("session_timeout", "$timeoutSecond");
-    $resp       = $this->mqClient->_request($params->method(), $params->pathname(), $params->requestBody());
-    $respDate   = new OpenResponse($resp);
-    $this->clientToken = $respDate->clientToken;
+    try {
+      $timeoutSecond = $this->mqClient->getSessionTimeout();
+      $params->addProperties("session_timeout", "$timeoutSecond");
+      $resp              = $this->mqClient->_request($params->method(), $params->pathname(), $params->requestBody());
+      $respDate          = new OpenResponse($resp);
+      $this->clientToken = $respDate->clientToken;
+    } catch (RuntimeException $e) {
+      if(ExceptionUtils::shouldTrowMQInvalidSecretKey(!empty($this->clientToken),$e)){
+        throw new MQInvalidSecretKey('invalid secret key');
+      }
+
+      throw $e;
+    }
   }
 
   protected function _close()

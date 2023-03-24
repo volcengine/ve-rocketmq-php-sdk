@@ -193,15 +193,10 @@ while (true) {
 
 ## 延时投递消息
 
-`Message` 类有 `delayAfter()` 和 `delayAt()` 两个方法可设置消息的延时属性，分别是指定掩饰秒数或指定投递消息的时间戳。两个方法只能选择其一使用。
+`Message` 类有 `setDelayLevel()` 方法可设置消息的延时属。可设置1-18等级.
 
 ```php
-$msg1 = new Message("topic_name", "content");
-// 延时10分钟投递消息
-$msg1->delayAfter(60 * 10);
-
 $msg2 = new Message("topic_name", "content");
-// 通过时间戳指定消息投递时间
-$msg2->delayAt(1678188531461)
 
+$msg2->setDelayLevel(5)
 ```
