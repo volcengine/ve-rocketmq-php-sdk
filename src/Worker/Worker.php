@@ -3,7 +3,7 @@ namespace RMQ\Worker;
 
 use RMQ\Client;
 use RMQ\Common\ExceptionUtils;
-use RMQ\Exception\MQInvalidSecretKey;
+use RMQ\Exception\MQInvalidSecretKeyException;
 use RMQ\RequestParams\OpenParams;
 use RMQ\RequestParams\CloseParams;
 use RMQ\RequestResponse\OpenResponse;
@@ -44,7 +44,7 @@ class Worker
       $this->clientToken = $respDate->clientToken;
     } catch (RuntimeException $e) {
       if(ExceptionUtils::shouldTrowMQInvalidSecretKey(!empty($this->clientToken),$e)){
-        throw new MQInvalidSecretKey('invalid secret key');
+        throw new MQInvalidSecretKeyException('invalid secret key');
       }
 
       throw $e;
