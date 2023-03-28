@@ -6,7 +6,7 @@ use RMQ\Exception\MQTokenTimeoutException;
 use RMQ\Client;
 use RMQ\Message;
 
-class ConsumeDemo
+class ProduceDemo
 {
 
 
@@ -73,7 +73,7 @@ class ConsumeDemo
 
 }
 
-$demo = new ConsumeDemo();
+$demo = new ProduceDemo();
 
 // --------发送一条消息---------
 $msg = new Message("topic_name", "content");
