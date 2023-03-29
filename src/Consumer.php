@@ -47,9 +47,9 @@ class Consumer extends Worker
       throw new MQInvalidArgumentException("groupId is necessary");
     }
 
-    if (!NumberUtils::intCheck($maxMessageNumber, 1, 30)) {
+    if (!NumberUtils::intCheck($maxMessageNumber, 1, 128)) {
       $maxMsgNumKey = ConsumerOptions::MAX_MESSAGE_NUMBER;
-      throw new MQInvalidArgumentException("$maxMsgNumKey must be an integer in the range of 1 to 30");
+      throw new MQInvalidArgumentException("$maxMsgNumKey must be an integer in the range of 1 to 128");
     }
 
     if (!NumberUtils::intCheck($maxWaitTime, 1000, 30000)) {
