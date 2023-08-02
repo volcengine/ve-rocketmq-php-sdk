@@ -1,4 +1,10 @@
 .vscode
 vendor
+.idea/**
+phpunit*
+*.phar*
+*.bat*
 *.DS_Store*
+.envrc
 composer-setup.php
+composer.lock
