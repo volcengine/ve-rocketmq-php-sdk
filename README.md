@@ -4,6 +4,7 @@
 
 # 安装
 
+
 ```shell
 composer require volcengine/ve-rocketmq-php-sdk
 ```
@@ -85,7 +86,7 @@ $groupID = ""; // 消费组ID
 $consumer = $client->createConsumer($groupID, [
   // 每次调用consumeMessage最多拉取12条消息
   "max_message_number" => 12,
-  // 在消息达到max_message_number之前的最大等待时长（单位ms）
+  // 在消息达到max_message_number之前，请求在服务端挂起的最大等待时长（单位ms）
   "max_wait_time"      => 3000
 ]);
 ```
@@ -191,12 +192,40 @@ while (true) {
 }
 ```
 
-## 延时投递消息
+## 延时消息
 
-`Message` 类有 `setDelayLevel()` 方法可设置消息的延时属。可设置1-18等级.
+延时是消息的一个属性，可通过`Message`类的`putProperty()`方法来设置消息的延时属性。
+
+### 定时投递消息
+
+通过指定的具体的毫秒时间戳定时投递消息。
+
+```php
+use RMQ\Message;
+
+$msg = new Message("topic_name", "content.");
+// 消息投递的具体毫秒时间戳（当前时间延迟30秒）
+$postTime = time() * 1000 + 30000; 
+// 将延时属性设置到Property中
+$msg->putProperty("__STARTDELIVERTIME", "$currentTimeStamp"); 
+```
+
+### 延时等级消息
+
+`Message` 类有 `setDelayLevel()` 方法可设置消息的延时属性。可设置1-18等级.
 
 ```php
 $msg2 = new Message("topic_name", "content");
 
 $msg2->setDelayLevel(5)
+```
+
+`setDelayLevel()` 方法背后实际上使用的还是`putProperty()`方法。使用`setDelayLevel()` 实际效果和下面一致。
+
+```php
+$level = 5
+
+$msg2 = new Message("topic_name", "content");
+
+$msg2->putProperty("__DelayTimeLevel", "$level");
 ```
