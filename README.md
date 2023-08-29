@@ -1,6 +1,6 @@
 # RocketMQ PHP SDK
 
-火山引擎消息队列 RocketMQ版PHP SDK 是基于 Http-Proxy 的RocketMQ客户端。 该SDK可通过RocketMQ实例的Http Proxy 接入点连接实例，实现消息的生产与消费。
+火山引擎消息队列 RocketMQ版PHP SDK 是基于 HTTP-Proxy 的RocketMQ客户端。 该SDK可通过RocketMQ实例的Http Proxy 接入点连接实例，实现消息的生产与消费。
 
 # 安装
 
@@ -13,7 +13,7 @@ composer require volcengine/ve-rocketmq-php-sdk
 
 ## 创建客户端。
 
-初始化一个RocketMQ客户端需要准备好火山引擎RocketMQ实例的Http Proxy接入点、accessKey和secretKey。
+初始化一个RocketMQ客户端需要准备好火山引擎RocketMQ实例的HTTP Proxy接入点、accessKey和secretKey。
 
 ```php
 use RMQ\Client;
@@ -137,7 +137,7 @@ sleep(60);
 $producer->publishMessage($msg);
 ```
 
-所以在持续生产消息时需要捕获这类异常并重新调用 `open()` 法重新在服务端开启一个生产者实例，SDK 提供了一个专门用来捕获该类错误的Exception在`RMQ\Exception\MQTokenTimeoutException` 。如下demo，对部分消息等待一个很长的时间，这些消息发送时就会捕获到超时错误。
+所以在持续生产消息时需要捕获这类异常并重新调用 `open()` 方法重新在服务端开启一个生产者实例，SDK 提供了一个专门用来捕获该类错误的Exception在`RMQ\Exception\MQTokenTimeoutException` 。如下demo，对部分消息等待一个很长的时间，这些消息发送时就会捕获到超时错误。
 
 ```php
 use RMQ\Exception\MQTokenTimeoutException;
